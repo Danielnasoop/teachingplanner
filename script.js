@@ -156,7 +156,7 @@ function savePlan() {
     const plan = {
         id: editMode ? currentPlanId : generateId(),
         school: currentSchool,
-        grade: currentGrade,
+        grade: parseInt(currentGrade),
         teacherName: teacherName,
         subject: subject,
         title: title,
@@ -284,7 +284,7 @@ function loadAllPlans() {
 // 특정 학년의 계획서 로드
 function loadPlansForGrade(school, grade) {
     const plansList = document.getElementById(`${school}-${grade}-plans`);
-    const plans = getPlans().filter(p => p.school === school && p.grade === grade);
+    const plans = getPlans().filter(p => p.school === school && parseInt(p.grade) === parseInt(grade));
 
     plansList.innerHTML = '';
 
