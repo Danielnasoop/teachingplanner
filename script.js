@@ -3,6 +3,7 @@ let currentSchool = 'elementary';
 let currentGrade = null;
 let currentPlanId = null;
 let editMode = false;
+let passwordAction = null; // 'edit' or 'delete'
 
 // 페이지 로드 시 초기화
 document.addEventListener('DOMContentLoaded', function() {
@@ -11,6 +12,20 @@ document.addEventListener('DOMContentLoaded', function() {
     initializeModals();
     loadAllPlans();
 });
+
+// 모달 닫기
+function closeModal(modal) {
+    modal.classList.remove('active');
+
+    // 폼 초기화
+    if (modal.id === 'planModal') {
+        document.getElementById('planForm').reset();
+        editMode = false;
+    } else if (modal.id === 'passwordModal') {
+        document.getElementById('verifyPassword').value = '';
+        passwordAction = null;
+    }
+}
 
 // 탭 초기화
 function initializeTabs() {
@@ -56,14 +71,15 @@ function initializeModals() {
     // 닫기 버튼
     closeButtons.forEach(button => {
         button.addEventListener('click', function() {
-            this.closest('.modal').classList.remove('active');
+            const modal = this.closest('.modal');
+            closeModal(modal);
         });
     });
 
     // 모달 외부 클릭 시 닫기
     window.addEventListener('click', function(event) {
         if (event.target.classList.contains('modal')) {
-            event.target.classList.remove('active');
+            closeModal(event.target);
         }
     });
 
@@ -81,6 +97,7 @@ function initializeModals() {
 
     // 수정 버튼
     document.getElementById('editPlanBtn').addEventListener('click', function() {
+        passwordAction = 'edit';
         document.getElementById('viewModal').classList.remove('active');
         document.getElementById('passwordModal').classList.add('active');
     });
@@ -88,6 +105,7 @@ function initializeModals() {
     // 삭제 버튼
     document.getElementById('deletePlanBtn').addEventListener('click', function() {
         if (confirm('정말로 이 계획서를 삭제하시겠습니까?')) {
+            passwordAction = 'delete';
             document.getElementById('viewModal').classList.remove('active');
             document.getElementById('passwordModal').classList.add('active');
         }
@@ -163,9 +181,8 @@ function savePlan() {
 
     savePlans(plans);
 
-    // 모달 닫기 및 폼 리셋
-    document.getElementById('planModal').classList.remove('active');
-    document.getElementById('planForm').reset();
+    // 모달 닫기
+    closeModal(document.getElementById('planModal'));
 
     // 화면 갱신
     loadAllPlans();
@@ -185,18 +202,18 @@ function viewPlan(planId) {
 
     const detailsDiv = document.getElementById('planDetails');
     detailsDiv.innerHTML = `
-        <h3>${plan.title}</h3>
+        <h3>${escapeHtml(plan.title)}</h3>
         <div class="detail-item">
             <div class="detail-label">교사 이름</div>
-            <div class="detail-content">${plan.teacherName}</div>
+            <div class="detail-content">${escapeHtml(plan.teacherName)}</div>
         </div>
         <div class="detail-item">
             <div class="detail-label">과목</div>
-            <div class="detail-content">${plan.subject}</div>
+            <div class="detail-content">${escapeHtml(plan.subject)}</div>
         </div>
         <div class="detail-item">
             <div class="detail-label">계획서 내용</div>
-            <div class="detail-content">${plan.content}</div>
+            <div class="detail-content plan-content-display">${escapeHtml(plan.content)}</div>
         </div>
         <div class="detail-item">
             <div class="detail-label">작성일</div>
@@ -226,20 +243,16 @@ function verifyPassword() {
         return;
     }
 
-    // 비밀번호 확인 후 동작 결정
-    const isDeleteAction = confirm('수정하려면 확인, 삭제하려면 취소를 눌러주세요.');
+    // 비밀번호 모달 닫기
+    closeModal(document.getElementById('passwordModal'));
 
-    document.getElementById('passwordModal').classList.remove('active');
-    document.getElementById('verifyPassword').value = '';
-
-    if (isDeleteAction) {
+    // 동작 수행
+    if (passwordAction === 'edit') {
         // 수정
         openPlanModal(plan.school, plan.grade, true);
-    } else {
+    } else if (passwordAction === 'delete') {
         // 삭제
-        if (confirm('정말로 삭제하시겠습니까?')) {
-            deletePlan(currentPlanId);
-        }
+        deletePlan(currentPlanId);
     }
 }
 
@@ -284,8 +297,8 @@ function loadPlansForGrade(school, grade) {
         const planItem = document.createElement('div');
         planItem.className = 'plan-item';
         planItem.innerHTML = `
-            <h4>${plan.title}</h4>
-            <p>${plan.subject} - ${plan.teacherName}</p>
+            <h4>${escapeHtml(plan.title)}</h4>
+            <p>${escapeHtml(plan.subject)} - ${escapeHtml(plan.teacherName)}</p>
             <div class="plan-meta">
                 <span>작성: ${formatDate(plan.createdAt)}</span>
                 <span>수정: ${formatDate(plan.updatedAt)}</span>
@@ -327,4 +340,11 @@ function formatDate(dateString) {
     const hours = String(date.getHours()).padStart(2, '0');
     const minutes = String(date.getMinutes()).padStart(2, '0');
     return `${year}-${month}-${day} ${hours}:${minutes}`;
+}
+
+// HTML 이스케이프 처리 (XSS 방지)
+function escapeHtml(text) {
+    const div = document.createElement('div');
+    div.textContent = text;
+    return div.innerHTML;
 }
