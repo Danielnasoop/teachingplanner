@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>학교 수업 계획서 관리 시스템</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <h1>학교 수업 계획서 관리 시스템</h1>
+        <p>학년별 수업 계획서를 작성하고 공유하세요</p>
+    </header>
+
+    <main>
+        <!-- 학교 선택 탭 -->
+        <div class="school-tabs">
+            <button class="tab-btn active" data-school="elementary">초등학교</button>
+            <button class="tab-btn" data-school="middle">중학교</button>
+            <button class="tab-btn" data-school="high">고등학교</button>
+        </div>
+
+        <!-- 학교별 콘텐츠 -->
+        <div class="school-content">
+            <!-- 초등학교 섹션 -->
+            <div id="elementary" class="school-section active">
+                <h2>초등학교 수업 계획서</h2>
+                <div class="grade-container">
+                    <div class="grade-section" data-grade="1">
+                        <h3>1학년</h3>
+                        <button class="add-plan-btn" data-school="elementary" data-grade="1">+ 계획서 작성</button>
+                        <div class="plans-list" id="elementary-1-plans"></div>
+                    </div>
+                    <div class="grade-section" data-grade="2">
+                        <h3>2학년</h3>
+                        <button class="add-plan-btn" data-school="elementary" data-grade="2">+ 계획서 작성</button>
+                        <div class="plans-list" id="elementary-2-plans"></div>
+                    </div>
+                    <div class="grade-section" data-grade="3">
+                        <h3>3학년</h3>
+                        <button class="add-plan-btn" data-school="elementary" data-grade="3">+ 계획서 작성</button>
+                        <div class="plans-list" id="elementary-3-plans"></div>
+                    </div>
+                    <div class="grade-section" data-grade="4">
+                        <h3>4학년</h3>
+                        <button class="add-plan-btn" data-school="elementary" data-grade="4">+ 계획서 작성</button>
+                        <div class="plans-list" id="elementary-4-plans"></div>
+                    </div>
+                    <div class="grade-section" data-grade="5">
+                        <h3>5학년</h3>
+                        <button class="add-plan-btn" data-school="elementary" data-grade="5">+ 계획서 작성</button>
+                        <div class="plans-list" id="elementary-5-plans"></div>
+                    </div>
+                    <div class="grade-section" data-grade="6">
+                        <h3>6학년</h3>
+                        <button class="add-plan-btn" data-school="elementary" data-grade="6">+ 계획서 작성</button>
+                        <div class="plans-list" id="elementary-6-plans"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 중학교 섹션 -->
+            <div id="middle" class="school-section">
+                <h2>중학교 수업 계획서</h2>
+                <div class="grade-container">
+                    <div class="grade-section" data-grade="1">
+                        <h3>1학년</h3>
+                        <button class="add-plan-btn" data-school="middle" data-grade="1">+ 계획서 작성</button>
+                        <div class="plans-list" id="middle-1-plans"></div>
+                    </div>
+                    <div class="grade-section" data-grade="2">
+                        <h3>2학년</h3>
+                        <button class="add-plan-btn" data-school="middle" data-grade="2">+ 계획서 작성</button>
+                        <div class="plans-list" id="middle-2-plans"></div>
+                    </div>
+                    <div class="grade-section" data-grade="3">
+                        <h3>3학년</h3>
+                        <button class="add-plan-btn" data-school="middle" data-grade="3">+ 계획서 작성</button>
+                        <div class="plans-list" id="middle-3-plans"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 고등학교 섹션 -->
+            <div id="high" class="school-section">
+                <h2>고등학교 수업 계획서</h2>
+                <div class="grade-container">
+                    <div class="grade-section" data-grade="1">
+                        <h3>1학년</h3>
+                        <button class="add-plan-btn" data-school="high" data-grade="1">+ 계획서 작성</button>
+                        <div class="plans-list" id="high-1-plans"></div>
+                    </div>
+                    <div class="grade-section" data-grade="2">
+                        <h3>2학년</h3>
+                        <button class="add-plan-btn" data-school="high" data-grade="2">+ 계획서 작성</button>
+                        <div class="plans-list" id="high-2-plans"></div>
+                    </div>
+                    <div class="grade-section" data-grade="3">
+                        <h3>3학년</h3>
+                        <button class="add-plan-btn" data-school="high" data-grade="3">+ 계획서 작성</button>
+                        <div class="plans-list" id="high-3-plans"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- 계획서 작성/수정 모달 -->
+    <div id="planModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2 id="modalTitle">수업 계획서 작성</h2>
+            <form id="planForm">
+                <div class="form-group">
+                    <label for="teacherName">교사 이름:</label>
+                    <input type="text" id="teacherName" required>
+                </div>
+                <div class="form-group">
+                    <label for="subject">과목:</label>
+                    <input type="text" id="subject" required>
+                </div>
+                <div class="form-group">
+                    <label for="planTitle">계획서 제목:</label>
+                    <input type="text" id="planTitle" required>
+                </div>
+                <div class="form-group">
+                    <label for="planContent">계획서 내용:</label>
+                    <textarea id="planContent" rows="10" required></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="password">비밀번호 (수정 시 필요):</label>
+                    <input type="password" id="password" required>
+                </div>
+                <button type="submit" class="submit-btn">저장</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- 계획서 보기 모달 -->
+    <div id="viewModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <div id="planDetails"></div>
+            <button id="editPlanBtn" class="edit-btn">수정하기</button>
+            <button id="deletePlanBtn" class="delete-btn">삭제하기</button>
+        </div>
+    </div>
+
+    <!-- 비밀번호 확인 모달 -->
+    <div id="passwordModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>비밀번호 확인</h2>
+            <form id="passwordForm">
+                <div class="form-group">
+                    <label for="verifyPassword">비밀번호:</label>
+                    <input type="password" id="verifyPassword" required>
+                </div>
+                <button type="submit" class="submit-btn">확인</button>
+            </form>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
